@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coffee-app-config
+data:
+  PORT: "3000"
+  APP_URL: "https://coffee.example.com"
+  ADMIN_EMAIL: "admin@example.com"
+  ADMIN_PHONE: "9000011111"
+  PAYMENT_RECIPIENT: "Shwets Coffee Shop"
+  PAYMENT_RECIPIENT_PHONE: "9431505374"
+  PAYMENT_RECIPIENT_UPI: "9431505374-2@axl"
+  ORDER_STORAGE_LABEL: "SQLite orders sheet (data/auth.db)"
+  GOOGLE_REDIRECT_URI: "https://coffee.example.com/auth/google/callback"
+  FACEBOOK_REDIRECT_URI: "https://coffee.example.com/auth/facebook/callback"

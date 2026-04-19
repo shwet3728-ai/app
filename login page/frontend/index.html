@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login | Shwets Coffee Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/frontend/admin-login.css" />
+  </head>
+  <body>
+    <main class="admin-login-shell">
+      <section class="admin-login-panel">
+        <header class="admin-login-header">
+          <div>
+            <p class="eyebrow">Shwets Coffee Shop</p>
+            <h1>Admin control room access</h1>
+            <p class="hero-copy">Customer ordering stays public. This screen is only for admin monitoring and fulfillment.</p>
+          </div>
+          <a class="shop-link" href="/coffee">Open customer shop</a>
+        </header>
+
+        <section class="auth-card admin-mode">
+          <div class="auth-header">
+            <p class="auth-kicker">Admin Access</p>
+            <h2 id="form-title">Admin sign in</h2>
+            <p id="form-subtitle">Use password or OTP to open the control room.</p>
+          </div>
+
+          <form class="auth-form" id="auth-form" novalidate>
+            <label class="field">
+              <span>Admin email</span>
+              <input type="text" name="email" placeholder="admin@example.com" />
+            </label>
+
+            <label class="field">
+              <span>Password</span>
+              <input type="password" name="password" placeholder="Enter admin password" minlength="6" />
+            </label>
+
+            <label class="field">
+              <span>Admin phone</span>
+              <input type="text" name="adminPhone" placeholder="9431505374" />
+            </label>
+
+            <div class="otp-row">
+              <label class="field">
+                <span>OTP</span>
+                <input type="text" name="adminOtp" placeholder="6-digit OTP" maxlength="6" />
+              </label>
+              <button class="ghost-inline-button" type="button" id="request-otp-button">Send OTP</button>
+            </div>
+
+            <div class="form-row">
+              <label class="checkbox">
+                <input type="checkbox" checked disabled />
+                <span id="checkbox-label">Admin access only</span>
+              </label>
+              <a href="/coffee" id="aux-link">Go to shop</a>
+            </div>
+
+            <button class="primary-button" type="submit" id="submit-button">Sign in as admin</button>
+            <p class="status-message" id="status-message" aria-live="polite"></p>
+            <p class="session-message" id="session-message" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <p class="scene-note" id="scene-note">Customers go straight to the menu. Admin watches orders here.</p>
+      </section>
+    </main>
+
+    <script src="/frontend/script.js"></script>
+  </body>
+</html>

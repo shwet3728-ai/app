@@ -1,0 +1,11 @@
+.git
+.gitignore
+node_modules
+backend/node_modules
+backend/.env
+backend/data/*.db
+backend/data/*.bak*
+backend/data/*.corrupt*
+npm-debug.log*
+docker-compose.yml
+k8s

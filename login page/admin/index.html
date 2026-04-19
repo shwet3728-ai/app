@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Control Room | Shwets Coffee Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/admin-assets/styles.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-header">
+        <div>
+          <p class="eyebrow">Admin control room</p>
+          <h1>Orders, payments, and live menu control</h1>
+          <p class="header-copy">
+            Watch pending orders, track transactions, and push product changes directly to the main website.
+          </p>
+        </div>
+        <div class="header-actions">
+          <a class="ghost-button" href="/coffee">Open customer site</a>
+          <button class="ghost-button" id="signout-button" type="button">Sign out</button>
+        </div>
+      </header>
+
+      <section class="summary-grid" id="summary-grid"></section>
+
+      <section class="layout-grid">
+        <article class="admin-card main-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Orders desk</p>
+              <h2>Active and completed orders</h2>
+            </div>
+            <div class="header-actions">
+              <input class="search-input" id="order-search" type="search" placeholder="Search by name, email, table" />
+              <button class="danger-button" id="reset-orders-button" type="button">Reset all orders</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Customer</th>
+                  <th>Table</th>
+                  <th>Items</th>
+                  <th>Amount</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="orders-body"></tbody>
+            </table>
+          </div>
+          <p class="empty-line" id="orders-empty">No orders yet.</p>
+        </article>
+
+        <aside class="stack-panel">
+          <article class="admin-card">
+            <div class="section-head compact">
+              <div>
+                <p class="eyebrow">Pending queue</p>
+                <h2>Needs action now</h2>
+              </div>
+            </div>
+            <div class="queue-list" id="pending-orders-list"></div>
+            <p class="empty-line" id="pending-orders-empty">No pending orders right now.</p>
+          </article>
+
+          <article class="admin-card">
+            <div class="section-head compact">
+              <div>
+                <p class="eyebrow">Feedback</p>
+                <h2>Customer notes</h2>
+              </div>
+            </div>
+            <div class="feedback-list" id="feedback-list"></div>
+            <p class="empty-line" id="feedback-empty">No feedback yet.</p>
+          </article>
+        </aside>
+      </section>
+
+      <section class="layout-grid lower-layout">
+        <article class="admin-card product-editor-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Catalog editor</p>
+              <h2>Add products or edit live items</h2>
+            </div>
+          </div>
+          <form class="product-form" id="product-form" novalidate>
+            <input type="hidden" id="product-id" name="id" />
+            <label>
+              <span>Name</span>
+              <input id="product-name" name="name" type="text" placeholder="Velvet Latte" />
+            </label>
+            <label>
+              <span>Category</span>
+              <select id="product-category" name="category">
+                <option value="espresso">Espresso</option>
+                <option value="cold">Cold</option>
+                <option value="dessert">Dessert</option>
+                <option value="bakery">Bakery</option>
+              </select>
+            </label>
+            <label>
+              <span>Price</span>
+              <input id="product-price" name="price" type="number" min="1" placeholder="220" />
+            </label>
+            <label>
+              <span>Roast / tag</span>
+              <input id="product-roast" name="roast" type="text" placeholder="Brazil + Ethiopia" />
+            </label>
+            <label class="wide">
+              <span>Short accent</span>
+              <input id="product-accent" name="accent" type="text" placeholder="Silky cocoa and caramel" />
+            </label>
+            <label class="wide">
+              <span>Description</span>
+              <textarea id="product-description" name="description" rows="4" placeholder="Product details shown for admin control and future frontend use."></textarea>
+            </label>
+            <label class="wide">
+              <span>Photo URL</span>
+              <input id="product-image-url" name="imageUrl" type="text" placeholder="https://images.example.com/latte.jpg or any image path" />
+            </label>
+            <label class="toggle">
+              <input id="product-active" name="isActive" type="checkbox" checked />
+              <span>Show on main website</span>
+            </label>
+            <div class="image-preview-wrap">
+              <img id="product-image-preview" alt="Product preview" hidden />
+              <div class="image-placeholder" id="product-image-placeholder">Photo preview</div>
+            </div>
+            <div class="form-actions">
+              <button class="primary-button" id="save-product-button" type="submit">Save product</button>
+              <button class="ghost-button" id="reset-product-button" type="button">Clear</button>
+              <button class="danger-button" id="delete-product-button" type="button" hidden>Delete product</button>
+            </div>
+            <p class="form-status" id="product-status" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="admin-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Live catalog</p>
+              <h2>Menu items on the main website</h2>
+            </div>
+            <input class="search-input" id="product-search" type="search" placeholder="Search products" />
+          </div>
+          <div class="product-list" id="product-list"></div>
+          <p class="empty-line" id="products-empty">No products yet.</p>
+        </article>
+      </section>
+
+      <section class="layout-grid lower-layout">
+        <article class="admin-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Website content</p>
+              <h2>Edit website content in storefront sequence</h2>
+            </div>
+          </div>
+          <p class="section-note">
+            Edit in this order: Gallery 1, Gallery 2, Gallery 3, Gallery 4, Gallery 5, then Menu. The customer site shows the same sequence.
+          </p>
+          <form class="product-form content-form" id="site-content-form" novalidate>
+            <label class="wide">
+              <span>Info section text</span>
+              <textarea id="info-body-input" rows="3" placeholder="Open daily. Fast pickup. Fresh roasting. Smooth in-store service."></textarea>
+            </label>
+            <label class="wide">
+              <span>Contact section text</span>
+              <textarea id="contact-body-input" rows="3" placeholder="Call, mail, or walk in for orders, beans, or cafe help."></textarea>
+            </label>
+            <label class="wide">
+              <span>Locations section text</span>
+              <textarea id="locations-body-input" rows="3" placeholder="Visit the main bar or order ahead and pick up fast."></textarea>
+            </label>
+            <label class="wide">
+              <span>FAQ section text</span>
+              <textarea id="faq-body-input" rows="3" placeholder="Short answers for timing, tables, and online payment."></textarea>
+            </label>
+
+            <label>
+              <span>Contact label 1</span>
+              <input id="contact-item-1-label" type="text" placeholder="Phone" />
+            </label>
+            <label>
+              <span>Contact value 1</span>
+              <input id="contact-item-1-value" type="text" placeholder="+91 ..." />
+            </label>
+            <label>
+              <span>Contact label 2</span>
+              <input id="contact-item-2-label" type="text" placeholder="Email" />
+            </label>
+            <label>
+              <span>Contact value 2</span>
+              <input id="contact-item-2-value" type="text" placeholder="hello@example.com" />
+            </label>
+            <label>
+              <span>Contact label 3</span>
+              <input id="contact-item-3-label" type="text" placeholder="Address" />
+            </label>
+            <label>
+              <span>Contact value 3</span>
+              <input id="contact-item-3-value" type="text" placeholder="Street address" />
+            </label>
+
+            <label>
+              <span>Location name 1</span>
+              <input id="location-item-1-name" type="text" placeholder="Main Cafe" />
+            </label>
+            <label>
+              <span>Location detail 1</span>
+              <input id="location-item-1-detail" type="text" placeholder="6:30 AM - 11:00 PM" />
+            </label>
+            <label>
+              <span>Location name 2</span>
+              <input id="location-item-2-name" type="text" placeholder="Pickup Counter" />
+            </label>
+            <label>
+              <span>Location detail 2</span>
+              <input id="location-item-2-detail" type="text" placeholder="7:00 AM - 10:00 PM" />
+            </label>
+
+            <label>
+              <span>Gallery eyebrow</span>
+              <input id="gallery-eyebrow-input" type="text" placeholder="Inside the cafe" />
+            </label>
+            <label>
+              <span>Gallery title</span>
+              <input id="gallery-title-input" type="text" placeholder="Shop moments" />
+            </label>
+            <label class="wide">
+              <span>Gallery description</span>
+              <textarea id="gallery-description-input" rows="3" placeholder="Five image slots for your shop photos and one wide menu image section."></textarea>
+            </label>
+            <div class="gallery-editor-stack">
+              <section class="gallery-editor-block">
+                <div class="gallery-editor-head">
+                  <strong>1. Gallery 1</strong>
+                  <button class="ghost-button" id="apply-gallery-image-1-button" type="button">Apply counter view</button>
+                </div>
+                <label>
+                  <span>Title</span>
+                  <input id="gallery-item-1-title" type="text" placeholder="Counter view" />
+                </label>
+                <label>
+                  <span>Cover image URL</span>
+                  <input id="gallery-item-1-cover-url" type="text" placeholder="Any image URL or path" />
+                </label>
+                <label class="wide">
+                  <span>Up to 10 image links, one per line</span>
+                  <textarea id="gallery-item-1-image-urls" rows="5" placeholder="https://..."></textarea>
+                </label>
+              </section>
+              <section class="gallery-editor-block">
+                <div class="gallery-editor-head">
+                  <strong>2. Gallery 2</strong>
+                  <button class="ghost-button" id="apply-gallery-image-2-button" type="button">Apply signature serve</button>
+                </div>
+                <label>
+                  <span>Title</span>
+                  <input id="gallery-item-2-title" type="text" placeholder="Signature serve" />
+                </label>
+                <label>
+                  <span>Cover image URL</span>
+                  <input id="gallery-item-2-cover-url" type="text" placeholder="Any image URL or path" />
+                </label>
+                <label class="wide">
+                  <span>Up to 10 image links, one per line</span>
+                  <textarea id="gallery-item-2-image-urls" rows="5" placeholder="https://..."></textarea>
+                </label>
+              </section>
+              <section class="gallery-editor-block">
+                <div class="gallery-editor-head">
+                  <strong>3. Gallery 3</strong>
+                  <button class="ghost-button" id="apply-gallery-image-3-button" type="button">Apply seating area</button>
+                </div>
+                <label>
+                  <span>Title</span>
+                  <input id="gallery-item-3-title" type="text" placeholder="Seating area" />
+                </label>
+                <label>
+                  <span>Cover image URL</span>
+                  <input id="gallery-item-3-cover-url" type="text" placeholder="Any image URL or path" />
+                </label>
+                <label class="wide">
+                  <span>Up to 10 image links, one per line</span>
+                  <textarea id="gallery-item-3-image-urls" rows="5" placeholder="https://..."></textarea>
+                </label>
+              </section>
+              <section class="gallery-editor-block">
+                <div class="gallery-editor-head">
+                  <strong>4. Gallery 4</strong>
+                  <button class="ghost-button" id="apply-gallery-image-4-button" type="button">Apply bean bar</button>
+                </div>
+                <label>
+                  <span>Title</span>
+                  <input id="gallery-item-4-title" type="text" placeholder="Bean bar" />
+                </label>
+                <label>
+                  <span>Cover image URL</span>
+                  <input id="gallery-item-4-cover-url" type="text" placeholder="Any image URL or path" />
+                </label>
+                <label class="wide">
+                  <span>Up to 10 image links, one per line</span>
+                  <textarea id="gallery-item-4-image-urls" rows="5" placeholder="https://..."></textarea>
+                </label>
+              </section>
+              <section class="gallery-editor-block">
+                <div class="gallery-editor-head">
+                  <strong>5. Gallery 5</strong>
+                  <button class="ghost-button" id="apply-gallery-image-5-button" type="button">Apply interior mood</button>
+                </div>
+                <label>
+                  <span>Title</span>
+                  <input id="gallery-item-5-title" type="text" placeholder="Interior mood" />
+                </label>
+                <label>
+                  <span>Cover image URL</span>
+                  <input id="gallery-item-5-cover-url" type="text" placeholder="Any image URL or path" />
+                </label>
+                <label class="wide">
+                  <span>Up to 10 image links, one per line</span>
+                  <textarea id="gallery-item-5-image-urls" rows="5" placeholder="https://..."></textarea>
+                </label>
+              </section>
+            </div>
+
+            <label>
+              <span>6. Menu eyebrow</span>
+              <input id="menu-eyebrow-input" type="text" placeholder="Menu image" />
+            </label>
+            <label>
+              <span>6. Menu title</span>
+              <input id="menu-title-input" type="text" placeholder="Wide horizontal menu preview" />
+            </label>
+            <label class="wide">
+              <span>6. Menu description</span>
+              <textarea id="menu-description-input" rows="3" placeholder="Replace this image with your real menu board or printed menu design."></textarea>
+            </label>
+            <label class="wide">
+              <span>6. Menu image URL</span>
+              <input id="menu-image-url-input" type="text" placeholder="Any image URL or path" />
+            </label>
+            <div class="inline-action-row">
+              <button class="ghost-button" id="apply-menu-image-button" type="button">Apply menu image</button>
+            </div>
+
+            <div class="form-actions">
+              <button class="primary-button" type="submit">Save website content</button>
+            </div>
+            <p class="form-status" id="site-content-status" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="admin-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Gallery preview</p>
+              <h2>Live image links</h2>
+            </div>
+          </div>
+          <div class="content-preview-grid" id="content-preview-grid"></div>
+        </article>
+      </section>
+
+      <section class="layout-grid lower-layout">
+        <article class="admin-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Transactions</p>
+              <h2>Payment and checkout history</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Payment</th>
+                  <th>Order</th>
+                  <th>Reference</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-body"></tbody>
+            </table>
+          </div>
+          <p class="empty-line" id="transactions-empty">No transactions yet.</p>
+        </article>
+
+        <article class="admin-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Customers</p>
+              <h2>Accounts and access</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Provider</th>
+                  <th>Role</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody id="customers-body"></tbody>
+            </table>
+          </div>
+          <p class="empty-line" id="customers-empty">No customer data yet.</p>
+        </article>
+      </section>
+    </main>
+
+    <script src="/admin-assets/script.js"></script>
+  </body>
+</html>
